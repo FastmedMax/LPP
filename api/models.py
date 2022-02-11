@@ -42,5 +42,5 @@ class Task(models.Model):
 class Goods(models.Model):
     picture = models.ImageField(verbose_name="Картинка товара")
     description = models.TextField(verbose_name="Описание товара")
-    name = models.CharField(verbose_name="Название товара")
+    name = models.CharField(verbose_name="Название товара", max_length=60)
     price = models.IntegerField(verbose_name="Цена товара")
