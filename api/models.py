@@ -37,3 +37,10 @@ class Task(models.Model):
     frequency = models.CharField(verbose_name="Частота задачи", max_length="60", choices=FREQUENCY)
     complexity = models.CharField(verbose_name="Сложность", max_length="60", choices=COMPLEXITY)
     is_complete = models.BooleanField(verbose_name="Выполнена ли задача")
+
+
+class Goods(models.Model):
+    picture = models.ImageField(verbose_name="Картинка товара")
+    description = models.TextField(verbose_name="Описание товара")
+    name = models.CharField(verbose_name="Название товара")
+    price = models.IntegerField(verbose_name="Цена товара")
