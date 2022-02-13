@@ -109,3 +109,24 @@ class TaskView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class GoodsView(APIView):
+    serializer_class_user = UserSerializer
+    serializer_class_goods = GoodsSerializer
+
+    def post(self, request):
+        try:
+            user = User.objects.get(user_id=request.data["user_id"])
+        except User.DoesNotExist:
+            return Response("Пользователь не найден!", status=status.HTTP_400_BAD_REQUEST)
+        try:
+            goods = Goods.objects.get(id=request.data["goods_id"])
+        except Goods.DoesNotExist:
+            return Response("Товар не найден!", status=status.HTTP_400_BAD_REQUEST)
+        
+        if user.coins < goods.price:
+            return Response("У пользователя недостаточно монет", status=status.HTTP_400_BAD_REQUEST)
+        
+        user.coins = user.coins - goods.price
+        user.save()
+        user.goods.add(goods)
+        return Response(status=status.HTTP_201_CREATED)
