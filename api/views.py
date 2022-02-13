@@ -60,3 +60,17 @@ class TaskListView(ListAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class TaskListWeekView(ListAPIView):
+    queryset = Task
+    serializer_class = TaskSerializer
+
+    def get(self, request, user_id, *args, **kwargs):
+        try:
+            current_week = timezone.now().isocalendar()[1]
+            tasks = self.queryset.objects.filter(user_id=user_id, expired_at__week=current_week)
+        except Task.DoesNotExist:
+            return Response("Задачи не найдены!", status=status.HTTP_404_NOT_FOUND)
+        serializer = self.serializer_class(tasks, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
