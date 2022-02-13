@@ -64,6 +64,10 @@ TEMPLATES = [
 WSGI_APPLICATION = "config.wsgi.application"
 
 
+REST_FRAMEWORK = {
+    "DATE_FORMAT": "%d.%m.%Y",
+}
+
 # Database
 
 DATABASES = {
