@@ -31,3 +31,16 @@ class UserView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+class AwardListView(ListAPIView):
+    queryset = Award
+    serializer_class = AwardSerializer
+
+    def get(self, request, *args, **kwargs):
+        try:
+            awards = self.queryset.objects.all()
+        except Award.DoesNotExist:
+            return Response("Награды не найдены!", status=status.HTTP_404_NOT_FOUND)
+        serializer = self.serializer_class(awards, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
