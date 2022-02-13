@@ -19,3 +19,15 @@ class GoodsSerializer(serializers.ModelSerializer):
         model = Goods
         fields = "__all__"
 
+
+class UserAwardSerializer(serializers.ModelSerializer):
+    picture = serializers.CharField(source="award.picture")
+    description = serializers.ReadOnlyField(source="award.description")
+    name = serializers.ReadOnlyField(source="award.name")
+    max_progress = serializers.ReadOnlyField(source="award.max_progress")
+
+    class Meta:
+        model = UserAward
+        exclude = ("user", "award")
+
+
