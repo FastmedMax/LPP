@@ -12,7 +12,7 @@ class Award(models.Model):
         HUNTER = "Hunter"
         EASY_DOES_IT = "Easy_does_it"
 
-    picture = models.ImageField(verbose_name="Картинка награды")
+    picture = models.ImageField(verbose_name="Картинка награды", blank=True)
     description = models.TextField(verbose_name="Описание награды")
     name = models.CharField(verbose_name="Название награды", max_length=60)
     max_progress = models.PositiveIntegerField(verbose_name="Максимальный прогресс для выполнения условия")
