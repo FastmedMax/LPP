@@ -79,9 +79,80 @@ class Task(models.Model):
     complexity = models.CharField(verbose_name="Сложность", max_length=60, choices=Complexyty.choices)
     is_complete = models.BooleanField(verbose_name="Выполнена ли задача")
 
+    def is_complete(self):
+        awards = self.user.awards.through.objects.filter(is_complete=False)
+        award_types = []
+        if self.expired_at >= timezone.now().date():
+            award_types.append(Award.Types.PUNCTUALITY.value)
+            if (self.expired_at - self.created_at).days > 15:
+                award_types.append(Award.Types.EASY_DOES_IT.value)
+        coins = 5
+        exp = 10
+        if self.importance == self.Importance.OPTIONAL.value:
+            coins += 1
+            exp += 1
+        elif self.importance == self.Importance.REQUIRED.value:
+            coins += 10
+            exp += 10
+        elif self.importance == self.Importance.URGENTLY.value:
+            coins += 20
+            exp += 20
+        
+        if self.frequency == self.Frequency.DAY.value:
+            coins += 5
+            exp += 5
+        elif self.frequency == self.Frequency.WEEK.value:
+            coins += 7
+            exp += 7
 
-class Goods(models.Model):
-    picture = models.ImageField(verbose_name="Картинка товара")
-    description = models.TextField(verbose_name="Описание товара")
-    name = models.CharField(verbose_name="Название товара", max_length=60)
-    price = models.IntegerField(verbose_name="Цена товара")
+        if self.complexity == self.Complexyty.EASY.value:
+            award_types.append(Award.Types.HUNTER.value)
+        elif self.complexity == self.Complexyty.MEDIUM.value:
+            coins = coins * 1.5
+            exp = exp * 1.5
+        elif self.complexity == self.Complexyty.HARD.value:
+            award_types.append(Award.Types.ENTHUSIAST.value)
+            coins = coins * 2
+            exp = exp * 2
+
+        self.user.coins += coins
+        self.user.experience += exp
+
+        # Update user awards progress
+        for award_type in award_types:
+            try:
+                award = awards.get(award__type=award_type)
+                award.progress += 1
+                award.save()
+            except UserAward.DoesNotExist:
+                pass
+
+
+        class Levels(enum.Enum):
+            ONE = (1, 100)
+            TWO = (2, 1000)
+            THREE = (3, 1200)
+            FOUR = (4, 1500)
+            FIVE = (5, 1800)
+
+            def __init__(self, num, requirement):
+                self.num = num
+                self.requirement = requirement
+
+
+        for level in Levels:
+            if self.user.level >= 5:
+                continue
+            if self.user.level != 0 and self.user.level <= level.num:
+                continue
+            if self.user.experience >= level.requirement:
+                self.user.experience = self.user.experience - level.requirement
+                self.user.level += 1
+                break
+        else:
+            exp_requirement = 500*(self.user.level + 1)*4
+            if self.user.experience >= exp_requirement:
+                self.user.experience = self.user.experience - exp_requirement
+                self.user.level += 1
+
+        self.user.save()
