@@ -53,32 +53,30 @@ class UserAward(models.Model):
 
 
 class Task(models.Model):
-    IMPORTANCE = [
-        ("OPT", "Optional"),
-        ("REQ", "Required"),
-        ("URG", "Urgently"),
-    ]
+    class Importance(models.Choices):
+        OPTIONAL = "Optional"
+        REQUIRED = "Required"
+        URGENTLY = "Urgently"
 
-    FREQUENCY = [
-        ("ONCE","Once"),
-        ("DAY","Once_a_day"),
-        ("WEEK","Once_a_week"),
-    ]
+    class Frequency(models.Choices):
+        ONCE = "Once"
+        DAY = "Once_a_day"
+        WEEK = "Once_a_week"
 
-    COMPLEXITY = [
-        ("EASY","Easy"),
-        ("MEDIUM","Medium"),
-        ("HARD","Hard"),
-    ]
+    class Complexyty(models.Choices):
+        EASY = "Easy"
+        MEDIUM = "Medium"
+        HARD = "Hard"
 
-    task_id = models.CharField(verbose_name="ID Задачи", max_length=60)
+    user = models.ForeignKey(User, verbose_name="ID пользователя", related_name="tasks", on_delete=models.CASCADE, to_field="user_id")
     name = models.CharField(verbose_name="Название задачи", max_length=60)
-    picture = models.ImageField(verbose_name="Картинка задачи")
-    description = models.TextField(verbose_name="Описание задачи")
+    picture = models.ImageField(verbose_name="Картинка задачи", blank=True)
+    description = models.TextField(verbose_name="Описание задачи", blank=True)
+    created_at = models.DateField(verbose_name="Дата назначения задачи", auto_now=True)
     expired_at = models.DateField(verbose_name="Дата окончания задачи")
-    importance = models.CharField(verbose_name="Важность задачи", max_length=60, choices=IMPORTANCE)
-    frequency = models.CharField(verbose_name="Частота задачи", max_length=60, choices=FREQUENCY)
-    complexity = models.CharField(verbose_name="Сложность", max_length=60, choices=COMPLEXITY)
+    importance = models.CharField(verbose_name="Важность задачи", max_length=60, choices=Importance.choices)
+    frequency = models.CharField(verbose_name="Частота задачи", max_length=60, choices=Frequency.choices)
+    complexity = models.CharField(verbose_name="Сложность", max_length=60, choices=Complexyty.choices)
     is_complete = models.BooleanField(verbose_name="Выполнена ли задача")
 
 
