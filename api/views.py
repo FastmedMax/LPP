@@ -44,3 +44,19 @@ class AwardListView(ListAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class TaskListView(ListAPIView):
+    queryset = Task
+    serializer_class = TaskSerializer
+
+    def get(self, request, user_id, *args, **kwargs):
+        try:
+            if kwargs.get("day"):
+                tasks = self.queryset.objects.filter(user_id=user_id, expired_at=kwargs["day"])
+            else:
+                tasks = self.queryset.objects.filter(user_id=user_id)
+        except Task.DoesNotExist:
+            return Response("Задачи не найдены!", status=status.HTTP_404_NOT_FOUND)
+        serializer = self.serializer_class(tasks, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
