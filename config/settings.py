@@ -1,4 +1,5 @@
 import os
+from os.path import join
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -82,6 +83,21 @@ DATABASES = {
 }
 
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/2.0/howto/static-files/
+STATIC_ROOT = os.path.normpath(join(os.path.dirname(BASE_DIR), "static"))
+STATICFILES_DIRS = []
+STATIC_URL = "/static/"
+STATICFILES_FINDERS = (
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+)
+
+# Media files
+MEDIA_ROOT = join(os.path.dirname(BASE_DIR), "media")
+MEDIA_URL = "/media/"
+
+
 # Password validation
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -109,11 +125,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
-
-
-# Static files (CSS, JavaScript, Images)
-
-STATIC_URL = "static/"
 
 # Default primary key field type
 
