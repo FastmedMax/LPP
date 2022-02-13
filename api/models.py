@@ -5,6 +5,27 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 # Create your models here.
+class Award(models.Model):
+    class Types(models.Choices):
+        ENTHUSIAST = "Enthusiast"
+        PUNCTUALITY = "Punctuality"
+        HUNTER = "Hunter"
+        EASY_DOES_IT = "Easy_does_it"
+
+    picture = models.ImageField(verbose_name="Картинка награды")
+    description = models.TextField(verbose_name="Описание награды")
+    name = models.CharField(verbose_name="Название награды", max_length=60)
+    max_progress = models.PositiveIntegerField(verbose_name="Максимальный прогресс для выполнения условия")
+    type = models.CharField(verbose_name="Тип награды", max_length=60, choices=Types.choices)
+
+
+class Goods(models.Model):
+    picture = models.ImageField(verbose_name="Картинка товара")
+    description = models.TextField(verbose_name="Описание товара")
+    name = models.CharField(verbose_name="Название товара", max_length=60)
+    price = models.PositiveIntegerField(verbose_name="Цена товара")
+
+
 class User(models.Model):
     user_id = models.CharField(verbose_name="ID пользователя в VK", max_length=60)
     experience = models.IntegerField(verbose_name="Опыт пользователя")
