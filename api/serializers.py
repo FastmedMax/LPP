@@ -31,3 +31,11 @@ class UserAwardSerializer(serializers.ModelSerializer):
         exclude = ("user", "award")
 
 
+class UserSerializer(serializers.ModelSerializer):
+    awards = UserAwardSerializer(many=True, source="useraward_set")
+
+    class Meta:
+        model = User
+        fields = "__all__"
+
+
