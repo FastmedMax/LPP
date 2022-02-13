@@ -45,6 +45,11 @@ class User(models.Model):
         return super().clean()
 
 
+class UserAward(models.Model):
+    user = models.ForeignKey(User, verbose_name="ID пользователя", on_delete=models.CASCADE)
+    award = models.ForeignKey(Award, verbose_name="ID награды", on_delete=models.CASCADE)
+    progress = models.PositiveIntegerField(verbose_name="Прогресс награды", default=0)
+    is_complete = models.BooleanField(verbose_name="Получена ли награда", default=False)
 
 
 class Task(models.Model):
