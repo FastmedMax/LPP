@@ -35,6 +35,16 @@ class User(models.Model):
     goods = models.ManyToManyField(Goods, verbose_name="Картинки пользователя", blank=True)
     awards = models.ManyToManyField(Award, verbose_name="Награды пользователя", blank=True, through="UserAward")
 
+    def clean(self) -> None:
+        if not self.id:
+            return
+        if self.goods:
+            goods_ids = self.goods.values_list("id", flat=True)
+        if self.picture_id not in goods_ids:
+            return ValidationError("This picture is not purchased")
+        return super().clean()
+
+
 
 
 class Task(models.Model):
