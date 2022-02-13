@@ -74,3 +74,38 @@ class TaskListWeekView(ListAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class TaskView(APIView):
+    queryset = Task
+    serializer_class = TaskSerializer
+    
+    def get(self, request, task_id):
+        try:
+            task = self.queryset.objects.get(id=task_id)
+        except Task.DoesNotExist:
+            return Response("Задача не найдена!", status=status.HTTP_404_NOT_FOUND)
+        serializer = self.serializer_class(task)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def patch(self, request):
+        try:
+            task = self.queryset.objects.get(id=request.data["task_id"])
+        except Task.DoesNotExist:
+            return Response("Задача не найдена!",status=status.HTTP_404_NOT_FOUND)
+        if request.data.get("is_complete"):
+            task.is_complete()
+        serializer = self.serializer_class(task, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=False):
+            serializer.update(task, serializer.validated_data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
