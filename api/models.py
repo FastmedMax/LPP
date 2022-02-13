@@ -18,12 +18,23 @@ class Award(models.Model):
     max_progress = models.PositiveIntegerField(verbose_name="Максимальный прогресс для выполнения условия")
     type = models.CharField(verbose_name="Тип награды", max_length=60, choices=Types.choices)
 
+    class Meta:
+        verbose_name = "Награда"
+        verbose_name_plural = "Награды"
+
+    def __str__(self) -> str:
+        return self.name
+
 
 class Goods(models.Model):
     picture = models.ImageField(verbose_name="Картинка товара")
     description = models.TextField(verbose_name="Описание товара")
     name = models.CharField(verbose_name="Название товара", max_length=60)
     price = models.PositiveIntegerField(verbose_name="Цена товара")
+
+    class Meta:
+        verbose_name = "Товар"
+        verbose_name_plural = "Товары"
 
 
 class User(models.Model):
@@ -44,12 +55,20 @@ class User(models.Model):
             return ValidationError("This picture is not purchased")
         return super().clean()
 
+    class Meta:
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"
+
 
 class UserAward(models.Model):
     user = models.ForeignKey(User, verbose_name="ID пользователя", on_delete=models.CASCADE)
     award = models.ForeignKey(Award, verbose_name="ID награды", on_delete=models.CASCADE)
     progress = models.PositiveIntegerField(verbose_name="Прогресс награды", default=0)
     is_complete = models.BooleanField(verbose_name="Получена ли награда", default=False)
+
+    class Meta:
+        verbose_name = "Награда пользователя"
+        verbose_name_plural = "Награды пользователя"
 
 
 class Task(models.Model):
@@ -156,3 +175,8 @@ class Task(models.Model):
                 self.user.level += 1
 
         self.user.save()
+
+
+    class Meta:
+        verbose_name = "Задача"
+        verbose_name_plural = "Задачи"
