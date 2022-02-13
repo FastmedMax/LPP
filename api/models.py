@@ -82,7 +82,7 @@ class Task(models.Model):
         DAY = "Once_a_day"
         WEEK = "Once_a_week"
 
-    class Complexyty(models.Choices):
+    class Complexity(models.Choices):
         EASY = "Easy"
         MEDIUM = "Medium"
         HARD = "Hard"
@@ -95,7 +95,7 @@ class Task(models.Model):
     expired_at = models.DateField(verbose_name="Дата окончания задачи")
     importance = models.CharField(verbose_name="Важность задачи", max_length=60, choices=Importance.choices)
     frequency = models.CharField(verbose_name="Частота задачи", max_length=60, choices=Frequency.choices)
-    complexity = models.CharField(verbose_name="Сложность", max_length=60, choices=Complexyty.choices)
+    complexity = models.CharField(verbose_name="Сложность", max_length=60, choices=Complexity.choices)
     is_complete = models.BooleanField(verbose_name="Выполнена ли задача", default=False)
 
     def is_complete(self):
@@ -124,12 +124,12 @@ class Task(models.Model):
             coins += 7
             exp += 7
 
-        if self.complexity == self.Complexyty.EASY.value:
+        if self.complexity == self.Complexity.EASY.value:
             award_types.append(Award.Types.HUNTER.value)
-        elif self.complexity == self.Complexyty.MEDIUM.value:
+        elif self.complexity == self.Complexity.MEDIUM.value:
             coins = coins * 1.5
             exp = exp * 1.5
-        elif self.complexity == self.Complexyty.HARD.value:
+        elif self.complexity == self.Complexity.HARD.value:
             award_types.append(Award.Types.ENTHUSIAST.value)
             coins = coins * 2
             exp = exp * 2
