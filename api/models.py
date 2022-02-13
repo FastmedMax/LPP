@@ -27,11 +27,14 @@ class Goods(models.Model):
 
 
 class User(models.Model):
-    user_id = models.CharField(verbose_name="ID пользователя в VK", max_length=60)
-    experience = models.IntegerField(verbose_name="Опыт пользователя")
-    level = models.IntegerField(verbose_name="Уровень пользователя")
-    coins = models.IntegerField(verbose_name="Количество монет у пользователя")
-    picture_id = models.IntegerField(verbose_name="ID картинки")
+    user_id = models.CharField(verbose_name="ID пользователя в VK", max_length=60, unique=True)
+    experience = models.PositiveIntegerField(verbose_name="Опыт пользователя", default=0)
+    level = models.PositiveIntegerField(verbose_name="Уровень пользователя", default=0)
+    coins = models.PositiveIntegerField(verbose_name="Количество монет у пользователя", default=0)
+    picture_id = models.ForeignKey(Goods, verbose_name="ID картинки", blank=True, on_delete=models.CASCADE, related_name="user_picture", null=True)
+    goods = models.ManyToManyField(Goods, verbose_name="Картинки пользователя", blank=True)
+    awards = models.ManyToManyField(Award, verbose_name="Награды пользователя", blank=True, through="UserAward")
+
 
 
 class Task(models.Model):
