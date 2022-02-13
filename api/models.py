@@ -96,7 +96,7 @@ class Task(models.Model):
     importance = models.CharField(verbose_name="Важность задачи", max_length=60, choices=Importance.choices)
     frequency = models.CharField(verbose_name="Частота задачи", max_length=60, choices=Frequency.choices)
     complexity = models.CharField(verbose_name="Сложность", max_length=60, choices=Complexyty.choices)
-    is_complete = models.BooleanField(verbose_name="Выполнена ли задача")
+    is_complete = models.BooleanField(verbose_name="Выполнена ли задача", default=False)
 
     def is_complete(self):
         awards = self.user.awards.through.objects.filter(is_complete=False)
