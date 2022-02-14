@@ -75,6 +75,9 @@ class UserAward(models.Model):
             self.is_complete = True
         return super().save()
 
+    def __str__(self) -> str:
+        return self.award.name
+
 
 class Task(models.Model):
     class Importance(models.Choices):
