@@ -21,12 +21,6 @@ Start the dev server for local development:
 docker-compose up
 ```
 
-Create awards
-
-```bash
-docker-compose run --rm web python manage.py createawards
-```
-
 * Pictures for awards added in admin panel!
 
 Run a command inside the docker container:
