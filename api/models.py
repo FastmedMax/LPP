@@ -70,6 +70,14 @@ class UserAward(models.Model):
         verbose_name = "Награда пользователя"
         verbose_name_plural = "Награды пользователя"
 
+    def save(self, *args, **kwargs) -> None:
+        if self.progress == self.award.max_progress:
+            self.is_complete = True
+        return super().save()
+
+    def __str__(self) -> str:
+        return self.award.name
+
 
 class Task(models.Model):
     class Importance(models.Choices):
